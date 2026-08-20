@@ -1,0 +1,22 @@
+services:
+  redis:
+    image: redis:8.2.1-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
