@@ -20,3 +20,7 @@ logging:
     org.springframework.data.redis: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+
+security:
+  api-key: ${GTFS_API_KEY}
