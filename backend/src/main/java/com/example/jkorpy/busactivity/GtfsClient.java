@@ -13,10 +13,9 @@ public class GtfsClient {
         this.gtfsRestClient = gtfsRestClient;
     }
 
-
-    public FeedMessage fetchVehiclePositions() {
+    public FeedMessage fetchNtaData(String param) {
         byte [] body = gtfsRestClient.get()
-                .uri("/Vehicles")
+                .uri(param)
                 .retrieve()
                 .body(byte[].class);
         try {

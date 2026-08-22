@@ -26,7 +26,7 @@ public class VehiclePositionService {
 
     @Cacheable(value = "vehicles", key="'all'")
     public List<VehiclePositionDto> getVehiclePosition() {
-        return gtfsClient.fetchVehiclePositions()
+        return gtfsClient.fetchNtaData("/Vehicles")
                 .getEntityList()
                 .stream()
                 .filter(FeedEntity::hasVehicle)
