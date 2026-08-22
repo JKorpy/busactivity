@@ -20,26 +20,6 @@ import java.util.List;
 
 @Configuration
 public class RedisConfig {
-    //Generic Template
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory, JsonMapper jsonMapper) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
-
-        StringRedisSerializer stringSerializer = new StringRedisSerializer();
-        GenericJacksonJsonRedisSerializer jsonSerializer = new GenericJacksonJsonRedisSerializer(jsonMapper);
-
-        //String
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-
-        //JSON
-        redisTemplate.setValueSerializer(jsonSerializer);
-        redisTemplate.setHashValueSerializer(jsonSerializer);
-
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
 
     @Bean
     public RedisCacheManager redisCache(RedisConnectionFactory connectionFactory, JsonMapper jsonMapper) {
