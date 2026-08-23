@@ -1,17 +1,13 @@
 package com.example.jkorpy.busactivity.configs;
 
-import com.example.jkorpy.busactivity.dtos.VehiclePositionDto;
-import org.springframework.cache.annotation.EnableCaching;
+import com.example.jkorpy.busactivity.dtos.VehicleDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -25,10 +21,10 @@ public class RedisConfig {
     public RedisCacheManager redisCache(RedisConnectionFactory connectionFactory, JsonMapper jsonMapper) {
 
         //Construct List<VehiclePositionDto> before serializing it into JSON,
-        //Then apply configuration and build it
+        //Then apply the configuration and build it
 
-        JavaType listType = jsonMapper.getTypeFactory().constructCollectionType(List.class, VehiclePositionDto.class);
-        JacksonJsonRedisSerializer<List<VehiclePositionDto>> serializer = new JacksonJsonRedisSerializer<>(jsonMapper, listType);
+        JavaType listType = jsonMapper.getTypeFactory().constructCollectionType(List.class, VehicleDto.class);
+        JacksonJsonRedisSerializer<List<VehicleDto>> serializer = new JacksonJsonRedisSerializer<>(jsonMapper, listType);
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(6))

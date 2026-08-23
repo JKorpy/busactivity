@@ -1,6 +1,6 @@
 package com.example.jkorpy.busactivity.dtos;
 
-public record VehiclePositionDto(
+public record VehicleDto(
         String vehicleId,
         String tripId,
         String routeId,

@@ -17,9 +17,6 @@ public class GtfsConfig {
 
     @Bean
     public RestClient gtfsRestClient() {
-        //Keep the builder flexible since this base url can take 3 parameters
-        //gtfsr or TripUpdates, same output
-        //Vehicles
         return RestClient.builder()
                 .baseUrl("https://api.nationaltransport.ie/gtfsr/v2")
                 .defaultHeader("x-api-key", subscriptionKey)

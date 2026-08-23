@@ -1,4 +1,4 @@
-package com.example.jkorpy.busactivity;
+package com.example.jkorpy.busactivity.client;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
