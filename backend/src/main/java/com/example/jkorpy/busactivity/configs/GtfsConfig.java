@@ -8,7 +8,6 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class GtfsConfig {
 
-
     private final String subscriptionKey;
 
     public GtfsConfig(@Value("${security.api-key}") String subscriptionKey) {
