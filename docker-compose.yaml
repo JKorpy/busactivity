@@ -1,22 +1,45 @@
 services:
-  redis:
-    image: redis:8.2.1-alpine
-    container_name: redis
+  db:
+    image: postgres:18-alpine
+    container_name: postgresql_container
     ports:
-      - "6379:6379"
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d busRoutes" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: always
 
   backend:
     build: ./backend
-    container_name: backend
+    container_name: backend_container
     ports:
-      - "8080:8080"
+      - "8089:8089"
+    environment:
+      DATABASE_URL: ${DB_URL}
+      DATABASE_USER: ${DB_USER}
+      DATABASE_PASS: ${DB_PASSWORD}
+      GTFS_API_KEY: ${API_KEY}
     depends_on:
-      - redis
+      db:
+        condition: service_healthy
+    restart: always
 
   frontend:
     build: ./frontend
-    container_name: frontend
+    container_name: frontend_container
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
+volumes:
+  postgres_data:
