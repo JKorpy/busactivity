@@ -1,7 +1,6 @@
 package com.example.jkorpy.busactivity.controllers;
 
 import com.example.jkorpy.busactivity.dtos.VehicleDto;
-import com.example.jkorpy.busactivity.models.Routes;
 import com.example.jkorpy.busactivity.services.RouteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/routes")
+@RequestMapping("api/routes")
 public class RouteController {
     private final RouteService routeService;
 
