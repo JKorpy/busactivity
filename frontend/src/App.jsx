@@ -1,122 +1,74 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [routeId, setRouteId] = useState("");
+    const [results, setResults] = useState(null); // array of buses | null
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    const searchRoute = async (event) => {
+        event.preventDefault();
 
-      <div className="ticks"></div>
+        const id = routeId.trim().toLocaleUpperCase();
+        if (!id) {
+            setError("Please enter a route ID");
+            setResults(null);
+            return;
+        }
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        setLoading(true);
+        setError("");
+        setResults(null);
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        try {
+            const response = await fetch(`api/routes/${encodeURIComponent(id)}`);
+            if (!response.ok) {
+                throw new Error(response.status === 404 ? "Route not found" : `HTTP ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Route:", data);
+            setResults(data);
+        } catch (err) {
+            console.error("Failed to fetch route:", err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <h1 class="text-3xl font-bold underline">React Route</h1>
+
+            <form onSubmit={searchRoute}>
+                <input
+                    type="text"
+                    placeholder="Enter route ID"
+                    value={routeId}
+                    onChange={(event) => setRouteId(event.target.value)}
+                />
+                <button type="submit" disabled={loading}>
+                    {loading ? "Searching..." : "Search"}
+                </button>
+            </form>
+
+            {results && (
+                <ul class="list-none">
+                    {results.map((bus) => (
+                        <li key={bus.vehicleId}>
+                            Vehicle {bus.vehicleId}: lat {bus.latitude}, lon {bus.longitude}
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {error && (
+                <ul>
+                    <li>{error}</li>
+                </ul>
+            )}
+        </>
+    );
 }
 
 export default App
